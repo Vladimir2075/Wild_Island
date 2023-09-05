@@ -1,6 +1,6 @@
 package Main.Island.Organism.Animals.Predators;
 public class Eagle extends PredatorAnimal {
-    String  logo = "\uD83D\uDC17";
+    String  logo = "\uD83E\uDD85";
     @Override
     public String getLogo() {
         return this.logo;

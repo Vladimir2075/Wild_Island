@@ -10,6 +10,7 @@ import java.util.Set;
 public class Cell {
     private final int X;
     private final int Y;
+
     private Map<String, Integer> numberOfLivingOrganisms = new HashMap<>();
     private  Map<String, Integer> maxCountAnimalInCell = new HashMap<>();
     private void initMaxCountAnimalInCell (){

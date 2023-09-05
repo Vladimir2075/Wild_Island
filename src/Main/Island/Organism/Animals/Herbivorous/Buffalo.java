@@ -1,6 +1,6 @@
 package Main.Island.Organism.Animals.Herbivorous;
 public class Buffalo extends HerbivorAnimal {
-    String  logo = "Buffalo ";
+    String  logo = "\uD83D\uDC03";
     @Override
     public String getLogo() {
         return this.logo;

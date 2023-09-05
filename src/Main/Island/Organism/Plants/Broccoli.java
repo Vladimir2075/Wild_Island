@@ -1,7 +1,7 @@
 package Main.Island.Organism.Plants;
 
-public class Grass extends Plant{
-    private String logo ="Grass";
+public class Broccoli extends Plant{
+    private String logo ="\uD83E\uDD66";
     @Override
     public String getLogo() {
         return this.logo;

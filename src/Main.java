@@ -1,6 +1,6 @@
 import Main.Island.Organism.Animals.Animal;
 import Main.Island.Organism.Animals.Herbivorous.Horse;
-import Main.Island.Organism.Animals.Predators.Boa;
+import Main.Island.Organism.Animals.Predators.Boar;
 import Main.Island.Organism.Animals.Predators.Wolf;
 import Main.Island.Organism.Organism;
 
@@ -8,10 +8,10 @@ public class Main {
     public static void main(String[] args) {
 
         //   тестирование функций
-      /*  Organism wolf = new Wolf();
+        Organism wolf = new Wolf();
         Organism wolf1 = new Wolf();
         Organism horse = new Horse();
-        Organism boa = new Boa();
+        Organism boa = new Boar();
         if (wolf instanceof Animal) {
             Animal animal = (Animal) wolf;
             System.out.println("Вероятность что " + wolf.getClass().getSimpleName() + " съест " +
@@ -33,6 +33,6 @@ public class Main {
         System.out.println(horse.toString());
         System.out.println(boa.toString());
 
-       */
+
     }
 }
