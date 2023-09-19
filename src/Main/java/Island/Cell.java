@@ -1,13 +1,11 @@
 package Island;
 
 import Island.Organism.Organism;
-
 import java.util.*;
-
 public class Cell {
     private static final Integer ZER0_COUNT =0;
     private static final Integer MIN_COUNT_ANIMAL =1;
-    private List<Organism> organisms = new LinkedList<>();
+    private volatile List<Organism> organisms = new LinkedList<>();
     private int X;
     private int Y;
     private Map<String, Integer> numberOfLivingOrganisms = new HashMap<>();
@@ -37,15 +35,12 @@ public class Cell {
     static {
         initMaxCountOrganismInCell();
     }
-
-    public Map<String, Integer> getNumberOfLivingOrganisms() {
+    public  Map<String, Integer> getNumberOfLivingOrganisms() {
         return numberOfLivingOrganisms;
     }
-
     public static Map<String, Integer> getMaxCountOrganismInCell() {
         return maxCountOrganismInCell;
     }
-
     @Override
     public String toString() {
         return "Cell{" +
@@ -59,11 +54,12 @@ public class Cell {
     }
     public boolean addToOrganisms (Organism organism){
         synchronized (numberOfLivingOrganisms) {
-            Integer  varCount = numberOfLivingOrganisms.get(organism.getLogo());
-            if (varCount ==null) {
-                 numberOfLivingOrganisms.put(organism.getLogo(),MIN_COUNT_ANIMAL);
+            Integer  varCount = numberOfLivingOrganisms.get(organism.getClass().getSimpleName()) == null ? ZER0_COUNT
+                                :numberOfLivingOrganisms.get(organism.getClass().getSimpleName());
+            if (varCount ==ZER0_COUNT) {
+                 numberOfLivingOrganisms.put(organism.getClass().getSimpleName(),MIN_COUNT_ANIMAL);
             } else if (getMaxCountOrganismPerCell(organism.getClass().getSimpleName())-varCount>0) {
-                     numberOfLivingOrganisms.replace(organism.getLogo(),varCount,varCount+MIN_COUNT_ANIMAL);
+                     numberOfLivingOrganisms.replace(organism.getClass().getSimpleName(),varCount,varCount+MIN_COUNT_ANIMAL);
             } else {
                 return false;
             }
@@ -73,20 +69,19 @@ public class Cell {
     }
     public void removeFromOrganisms (Organism organism) throws Exception {
         synchronized (numberOfLivingOrganisms) {
-            Integer varCount = numberOfLivingOrganisms.get(organism.getLogo());
+            Integer  varCount = numberOfLivingOrganisms.get(organism.getClass().getSimpleName()) == null ? ZER0_COUNT
+                                :numberOfLivingOrganisms.get(organism.getClass().getSimpleName());
             if (varCount == 0) {
                 throw new Exception("Animals escaped from the island");
             } else {
-                numberOfLivingOrganisms.replace(organism.getLogo(), varCount, varCount-MIN_COUNT_ANIMAL);
+                numberOfLivingOrganisms.replace(organism.getClass().getSimpleName(), varCount, varCount-MIN_COUNT_ANIMAL);
             }
         }
         this.organisms.remove(organism);
     }
-
     public List<Organism> getOrganisms() {
         return organisms;
     }
-
     public Cell(int x, int y) {
         this.X = x;
         this.Y = y;

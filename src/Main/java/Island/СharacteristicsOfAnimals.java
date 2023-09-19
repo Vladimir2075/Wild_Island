@@ -7,8 +7,8 @@ import java.util.Map;
 public class СharacteristicsOfAnimals {
     private static СharacteristicsOfAnimals instant;
     private Map<String, Map<String, Integer>> eatAnimalProbabilityMatrix;
-    private Map<String, Integer> maxSpedOfTheAnimals=new HashMap<String, Integer>();
-    private Map<String, Float> amountFoodPerIterationOfTheAnimals=new HashMap<String, Float>();
+    private Map<String, Integer> maxSpedOfTheAnimals = new HashMap<String, Integer>();
+    private Map<String, Float> amountFoodPerIterationOfTheAnimals = new HashMap<String, Float>();
     public Map<String, Map<String, Integer>> getEatAnimalProbabilityMatrix() {
         return eatAnimalProbabilityMatrix;
     }
@@ -23,7 +23,7 @@ public class СharacteristicsOfAnimals {
         eatAnimalProbabilityMatrix = new HashMap<>(
                 Map.of("Wolf", new HashMap<>(Map.of("Horse", 10, "Deer", 15, "Rabbit", 60, "Mouse", 80,
                                 "Goat", 60, "Sheep", 70, "Boar", 15, "Buffalo", 10, "Duck", 40)),
-                        "Boa", new HashMap<>(Map.of("Fox", 15, "Rabbit", 20, "Mouse", 40, "Duck", 40)),
+                        "Boa", new HashMap<>(Map.of( "Fox", 100,"Rabbit", 20, "Mouse", 40, "Duck", 40)),
                         "Fox", new HashMap<>(Map.of("Rabbit", 70, "Mouse", 90, "Duck", 60, "Caterpillar", 40)),
                         "Bear", new HashMap<>(Map.of("Boa", 80, "Horse", 40, "Deer", 80, "Rabbit", 80,
                                 "Mouse", 90, "Goat", 70, "Sheep", 70, "Boar", 50, "Buffalo", 20, "Duck", 10)),
@@ -68,7 +68,6 @@ public class СharacteristicsOfAnimals {
         maxSpedOfTheAnimals.put("Duck", 4);
         maxSpedOfTheAnimals.put("Caterpillar",0);
     }
-
     private void initializationAmountFoodAnimals(){
         amountFoodPerIterationOfTheAnimals.put("Wolf", 8f);
         amountFoodPerIterationOfTheAnimals.put("Boa", 3f);
@@ -90,7 +89,6 @@ public class СharacteristicsOfAnimals {
         initializationEatAnimalProbabilityMatrix ();
         initializationMaxSpedAnimal ();
         initializationAmountFoodAnimals();
-
     };
     public static СharacteristicsOfAnimals getInstant() {
         if (instant ==null) {
@@ -98,5 +96,4 @@ public class СharacteristicsOfAnimals {
         }
         return instant;
     }
-
 }

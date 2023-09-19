@@ -4,25 +4,21 @@ import Island.Organism.Animals.Animal;
 import Island.Organism.Animals.Herbivorous.HerbivorAnimal;
 import Island.Organism.Animals.Predators.PredatorAnimal;
 import Island.Organism.Organism;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import Island.Organism.Plants.Plant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MapIsland {
     private static MapIsland instance;
-    private  int lengthIsland = 4;
-    private  int widthIsland = 4;
+    private Statistics statistics = Statistics.getInstance();
+    public static final int TIME_WAIT_BETWEEN_ACTIONS_ANIMAL = 5;
+    private int lengthIsland = 4;
+    private int widthIsland = 4;
     private int durationSimulationCycle = 5000;
-    private float proportionNumberAnimalsFromMax = 0.25f;
-    private HashMap<Class,Integer> listOfPlants = new HashMap<>();
-    private HashMap<Class,Integer> statisticsOfAnimalPredators = new HashMap<>();
-    private HashMap<Class,Integer> statisticsOfAnimalHerbivorous = new HashMap<>();
-    private HashMap<Class,Integer> statisticsOfPlants = new HashMap<>();
-    private List <Animal>  animalList = new ArrayList<>();
+    private float proportionNumberAnimalsFromMax = 0.1f;
+    private volatile List <Animal>  listOfAnimal = new ArrayList<>();
+    private volatile List <Plant>  listOfPlants = new ArrayList<>();
     private Cell[][] listOfCellsIsland;
     public int getLengthIsland() {
         return lengthIsland;
@@ -36,20 +32,42 @@ public class MapIsland {
        }
        return instance;
     }
+    public float getProportionNumberAnimalsFromMax() {
+        return proportionNumberAnimalsFromMax;
+    }
+    public List<Animal> getListOfAnimal() {
+        return listOfAnimal;
+    }
+    public List<Animal> getListOfAnimalForRunThread (){
+        List<Animal> result = new ArrayList<>();
+        synchronized (listOfAnimal) {
+            for (Animal animal : listOfAnimal) {
+                if (!animal.isRunThread()) {
+                    result.add(animal);
+                }
+            }
+        }
+        return result;
+    }
+    public List<Plant> getListOfPlants(Cell cell)
+    {
+        List<Plant> result = new ArrayList<>();
+        for (Plant plant :listOfPlants
+             ) {
+            if (plant.getFieldOrganism() == cell && plant.isAlive()) {
+                result.add(plant);
+            }
+        }
+        return result;
+    }
     public static MapIsland getInstance(int lengthIsland, int widthIsland, int durationSimulationCycle, int proportionNumberAnimalsFromMax){
         if (instance==null) {
             instance = new MapIsland(lengthIsland, widthIsland, durationSimulationCycle, proportionNumberAnimalsFromMax);
         }
         return instance;
     }
-    public HashMap<Class, Integer> getStatisticsOfAnimalPredators() {
-        return statisticsOfAnimalPredators;
-    }
-    public HashMap<Class, Integer> getStatisticsOfAnimalHerbivorous() {
-        return statisticsOfAnimalHerbivorous;
-    }
-    public HashMap<Class, Integer> getStatisticsOfPlants() {
-        return statisticsOfPlants;
+    public int getDurationSimulationCycle() {
+        return durationSimulationCycle;
     }
     public Cell[][] getListOfCellsIsland() {
         return listOfCellsIsland;
@@ -57,13 +75,14 @@ public class MapIsland {
     public void birthOfOrganism (Organism organism) {
         HashMap<Class,Integer> map;
                 if (organism instanceof PredatorAnimal ) {
-                    map = statisticsOfAnimalPredators;
-                    addAnimalList((Animal) organism);
+                    map = statistics.getStatisticsOfAnimalPredators();
+                    addToAnimalList(organism);
                 } else if (organism instanceof HerbivorAnimal) {
-                    map = statisticsOfAnimalHerbivorous;
-                    addAnimalList((Animal) organism);
+                    map = statistics.getStatisticsOfAnimalHerbivorous();
+                    addToAnimalList(organism);
                 } else {
-                    map = statisticsOfPlants;
+                    map = statistics.getStatisticsOfPlants();
+                    addToPlantsList (organism);
                 }
         synchronized (map) {
             if (map.get(organism.getClass())==null) {
@@ -76,19 +95,30 @@ public class MapIsland {
     public void DeathOfOrganism (Organism organism) {
         HashMap<Class,Integer> map;
         if (organism instanceof PredatorAnimal ) {
-            map = statisticsOfAnimalPredators;
+            map = statistics.getStatisticsOfAnimalPredators();
         } else if (organism instanceof HerbivorAnimal) {
-            map = statisticsOfAnimalHerbivorous;
+            map = statistics.getStatisticsOfAnimalHerbivorous();
         } else {
-            map = statisticsOfPlants;
+            map = statistics.getStatisticsOfPlants();
+         //       if (listOfPlants.indexOf(organism)>0) {
+         //           this.listOfPlants.remove(organism);
+         //       }
         }
         synchronized (map) {
             if (map.get(organism.getClass())>1) {
                 map.put(organism.getClass(),map.get(organism.getClass())-1);
             } else {
-                map.remove(organism.getClass());
+                if (map.get(organism.getClass())!=null) {
+                    map.remove(organism.getClass());
+                }
             }
         }
+        HashMap<Class,Integer> mapDeathOrganism =statistics.getStatisticsOfDeath();
+            if (mapDeathOrganism.get(organism.getClass()) == null) {
+                mapDeathOrganism.put(organism.getClass(), 1);
+            } else {
+                mapDeathOrganism.put(organism.getClass(), mapDeathOrganism.get(organism.getClass()) + 1);
+            }
     }
     private MapIsland() {
         initialisationCellsOfIsland ();
@@ -100,8 +130,7 @@ public class MapIsland {
         this.proportionNumberAnimalsFromMax = proportionNumberAnimalsFromMax;
         initialisationCellsOfIsland();
     }
-
-    private void  initialisationCellsOfIsland (){
+    private void initialisationCellsOfIsland (){
         this.listOfCellsIsland  = new Cell[lengthIsland][widthIsland];
         for (int i = 0; i < lengthIsland; i++) {
             for (int j=0; j<widthIsland; j++) {
@@ -109,45 +138,14 @@ public class MapIsland {
             }
         }
     }
-
-    public void addAnimalList(Organism organism) {
-        this.animalList.add((Animal)organism);
+    public void addToAnimalList(Organism organism) {
+        synchronized (listOfAnimal) {
+            this.listOfAnimal.add((Animal) organism);
+        }
     }
-
-    public void getStatistic (){
-        System.out.println((getStatisticsOfAnimalPredators().size() > 0)? "As of now, statistics on animal predators":" ");
-        for (Map.Entry<Class,Integer> classStatistic: getStatisticsOfAnimalPredators().entrySet()
-           ) {
-            try {
-                Method logo =  classStatistic.getKey().getMethod("getLogo");
-                System.out.println(classStatistic.getKey().getSimpleName() + logo.invoke(null) +" count:"+
-                                   classStatistic.getValue());
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
+    public void addToPlantsList(Organism organism) {
+        synchronized (listOfPlants) {
+            this.listOfPlants.add((Plant) organism);
         }
-        System.out.println( getStatisticsOfAnimalHerbivorous().size()>0 ? "As of now, statistics on animal herbivorous":" ");
-        for (Map.Entry<Class,Integer> classStatistic: this.statisticsOfAnimalHerbivorous.entrySet()
-        ) {
-            try {
-                Method logo =  classStatistic.getKey().getMethod("getLogo");
-                System.out.println(classStatistic.getKey().getSimpleName() + logo.invoke(null) +" count:"+
-                        classStatistic.getValue());
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        System.out.println(getStatisticsOfPlants().size()>0?"As of now, the balances of the plants":" ");
-        for (Map.Entry<Class,Integer> classStatistic: this.statisticsOfPlants.entrySet()
-        ) {
-            try {
-                Method logo =  classStatistic.getKey().getMethod("getLogo");
-                System.out.println(classStatistic.getKey().getSimpleName() + logo.invoke(null) +" count:"+
-                        classStatistic.getValue());
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
     }
 }

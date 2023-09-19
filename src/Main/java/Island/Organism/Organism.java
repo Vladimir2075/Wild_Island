@@ -1,15 +1,14 @@
 package Island.Organism;
 
 import Island.Cell;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Organism {
     private static Map<String, Float> weightMatrixOfOrganisms=new HashMap<String, Float>();
     private float weight;
-    private Cell fieldOrganism;
-    private static String logo;
+    protected Cell fieldOrganism;
+    private static final String LOGO = "Organism";
     static {
         weightMatrixOfOrganisms.put("Wolf", 50f);
         weightMatrixOfOrganisms.put("Boa", 15f);
@@ -33,13 +32,14 @@ public abstract class Organism {
         weightMatrixOfOrganisms.put("Herb", 1f);
     }
     public Cell getFieldOrganism() {
+
         return fieldOrganism;
     }
     public void setFieldOrganism(Cell fieldOrganism) {
         this.fieldOrganism = fieldOrganism;
     }
     public static String getLogo() {
-        return logo;
+        return LOGO;
     }
 
     public float getWeight() {

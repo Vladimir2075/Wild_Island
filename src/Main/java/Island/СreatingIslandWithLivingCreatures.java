@@ -5,14 +5,13 @@ import java.util.List;
 
 public class СreatingIslandWithLivingCreatures {
     private static MapIsland mapIsland = MapIsland.getInstance();
-
     public СreatingIslandWithLivingCreatures() {
     }
     public void initialisationIsland (){
         List<Thread> threadList = new ArrayList<>();
-        СharacteristicsOfAnimals сharacteristicsOfAnimals = СharacteristicsOfAnimals.getInstant();
         for (Class classAnimal:OrganismCreator.getAnimalsType()) {
-            int countAnimals = Cell.getMaxCountOrganismPerCell(classAnimal.getSimpleName()) * mapIsland.getLengthIsland()* mapIsland.getWidthIsland()/4;
+            int countAnimals = (int)(Cell.getMaxCountOrganismPerCell(classAnimal.getSimpleName()) * mapIsland.getLengthIsland()* mapIsland.getWidthIsland()*
+                               (mapIsland.getProportionNumberAnimalsFromMax()));
             OrganismInitialisation organismInitialisation = new OrganismInitialisation(classAnimal, mapIsland, countAnimals);
             Thread thread = new Thread(organismInitialisation);
             threadList.add(thread);
