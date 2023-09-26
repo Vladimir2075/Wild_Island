@@ -5,7 +5,6 @@ import Island.MapIsland;
 import Island.Organism.Animals.Animal;
 import Island.Organism.Organism;
 import Island.Organism.Plants.Plant;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,7 +14,6 @@ public abstract class HerbivorAnimal extends Animal {
     private final int VALUE_MINIMUM_Probability = 49;
     private ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     protected MapIsland mapIsland = MapIsland.getInstance();
-
     private void deathAnimal() {
         try {
             this.setAlive(false);
@@ -25,7 +23,6 @@ public abstract class HerbivorAnimal extends Animal {
             System.out.println("Animal was Death");
         }
     }
-
     @Override
     public void eat() {
         Cell cell = this.getFieldOrganism();

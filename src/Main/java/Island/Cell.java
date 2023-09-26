@@ -1,10 +1,9 @@
 package Island;
-
 import Island.Organism.Organism;
 import java.util.*;
 public class Cell {
     private static final Integer ZER0_COUNT =0;
-    private static final Integer MIN_COUNT_ANIMAL =1;
+    private static final Integer MIN_COUNT_ANIMAL = 1;
     private volatile List<Organism> organisms = new LinkedList<>();
     private int X;
     private int Y;

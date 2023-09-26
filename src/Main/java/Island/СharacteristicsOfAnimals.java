@@ -9,6 +9,17 @@ public class СharacteristicsOfAnimals {
     private Map<String, Map<String, Integer>> eatAnimalProbabilityMatrix;
     private Map<String, Integer> maxSpedOfTheAnimals = new HashMap<String, Integer>();
     private Map<String, Float> amountFoodPerIterationOfTheAnimals = new HashMap<String, Float>();
+    private СharacteristicsOfAnimals() {
+        initializationEatAnimalProbabilityMatrix ();
+        initializationMaxSpedAnimal ();
+        initializationAmountFoodAnimals();
+    };
+    public static СharacteristicsOfAnimals getInstant() {
+        if (instant ==null) {
+            instant = new СharacteristicsOfAnimals();
+        }
+        return instant;
+    }
     public Map<String, Map<String, Integer>> getEatAnimalProbabilityMatrix() {
         return eatAnimalProbabilityMatrix;
     }
@@ -84,16 +95,5 @@ public class СharacteristicsOfAnimals {
         amountFoodPerIterationOfTheAnimals.put("Buffalo", 100f);
         amountFoodPerIterationOfTheAnimals.put("Duck", 0.15f);
         amountFoodPerIterationOfTheAnimals.put("Caterpillar", 0f);
-    }
-    private СharacteristicsOfAnimals() {
-        initializationEatAnimalProbabilityMatrix ();
-        initializationMaxSpedAnimal ();
-        initializationAmountFoodAnimals();
-    };
-    public static СharacteristicsOfAnimals getInstant() {
-        if (instant ==null) {
-            instant = new СharacteristicsOfAnimals();
-        }
-        return instant;
     }
 }

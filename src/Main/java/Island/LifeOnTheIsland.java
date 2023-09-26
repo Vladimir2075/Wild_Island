@@ -1,13 +1,13 @@
 package Island;
-
 import Island.Organism.Animals.Animal;
 import Island.Organism.Animals.Predators.PredatorAnimal;
 import java.util.concurrent.*;
 public class LifeOnTheIsland {
+    private int countCorePoolSize = 1;
     private MapIsland map = MapIsland.getInstance();
     private boolean checkExitConditional() {
         synchronized (map.getListOfAnimal()) {
-            if (map.getListOfAnimal().size() ==0) {return true;}
+            if (map.getListOfAnimal().size() == 0) {return true;}
             for (Animal animal : map.getListOfAnimal()) {
                 if (animal instanceof PredatorAnimal) {
                     if (animal.isAlive()) {
@@ -34,7 +34,7 @@ public class LifeOnTheIsland {
     public void runLifeOnTheIsland () {
         new СreatingIslandWithLivingCreatures().initialisationIsland();
         Statistics statistics = Statistics.getInstance();
-        ScheduledExecutorService executorServiceStatistic = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executorServiceStatistic = Executors.newScheduledThreadPool(countCorePoolSize);
         executorServiceStatistic.scheduleWithFixedDelay(statistics, 0, map.getDurationSimulationCycle(), TimeUnit.MILLISECONDS);
         try {
             Thread.sleep(5000);

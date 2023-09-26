@@ -60,7 +60,6 @@ public abstract class PredatorAnimal extends Animal {
                         probabilityKillingAnimal = 0;
                     }
                 }
-
             if ((MAX_PROBABILITY - probabilityKillingAnimal) <= RANDOM_ORGANISM.nextInt(MAX_PROBABILITY) &&  this!=organismFood && organismFood!=null) {
                 Organism   organismHasMaxHashCode = this.hashCode() > organismFood.hashCode()? this:organismFood;
                 Organism   organismHasMinHashCode = this.hashCode() > organismFood.hashCode()? organismFood:this;

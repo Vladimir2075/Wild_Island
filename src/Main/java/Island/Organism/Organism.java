@@ -8,6 +8,9 @@ public abstract class Organism {
     private static Map<String, Float> weightMatrixOfOrganisms=new HashMap<String, Float>();
     private float weight;
     protected Cell fieldOrganism;
+    public Organism (){
+        setWeight();
+    }
     private static final String LOGO = "Organism";
     static {
         weightMatrixOfOrganisms.put("Wolf", 50f);
@@ -41,16 +44,10 @@ public abstract class Organism {
     public static String getLogo() {
         return LOGO;
     }
-
     public float getWeight() {
         return weight;
-    }
-    public Organism (){
-        setWeight();
     }
     public void setWeight() {
         this.weight = weightMatrixOfOrganisms.get(this.getClass().getSimpleName());
     }
-
-
 }

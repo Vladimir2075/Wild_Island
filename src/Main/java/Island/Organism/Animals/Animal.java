@@ -28,6 +28,11 @@ public abstract class Animal extends Organism implements Runnable {
     private volatile float lifeLevel = 100f;
     private float lossEnergyLife = 20;
     private volatile boolean isAlive = true;
+    public Animal() {
+        super();
+        setMaxSpeed();
+        setAmountFoodPerIteration();
+    }
     public void setLifeLevel(float lifeLevel) {
         this.lifeLevel = lifeLevel;
     }
@@ -46,11 +51,6 @@ public abstract class Animal extends Organism implements Runnable {
     }
     private void setMaxSpeed() {
         this.maxSpeed = characteristicsOfAnimals.getMaxSpedOfTheAnimals().get(this.getClass().getSimpleName());
-    }
-    public Animal() {
-        super();
-        setMaxSpeed();
-        setAmountFoodPerIteration();
     }
     public boolean isRunThread() {
         return isRunThread;

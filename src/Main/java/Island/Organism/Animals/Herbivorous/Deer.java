@@ -1,11 +1,12 @@
 package Island.Organism.Animals.Herbivorous;
+
 import Island.MapIsland;
 import Island.Organism.Animals.RealAnimal;
 import java.util.concurrent.ThreadLocalRandom;
 @RealAnimal
 public class Deer extends HerbivorAnimal implements Runnable {
     private static final String LOGO = "\uD83E\uDD8C";
-    private ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
     public static String getLogo() {
         return LOGO;
     }
@@ -13,7 +14,7 @@ public class Deer extends HerbivorAnimal implements Runnable {
     public void run() {
         this.setRunThread(true);
         while (this.isAlive()) {
-            int index = RANDOM.nextInt(COUNT_ACTIONS_ANIMAL);
+            int index = random.nextInt(COUNT_ACTIONS_ANIMAL);
             try {
                 for (int i = 0; i < COUNT_ACTIONS_ANIMAL; i++) {
                     switch (i + index) {
@@ -27,8 +28,6 @@ public class Deer extends HerbivorAnimal implements Runnable {
                 Thread.sleep(MapIsland.TIME_WAIT_BETWEEN_ACTIONS_ANIMAL);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

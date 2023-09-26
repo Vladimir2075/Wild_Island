@@ -17,6 +17,7 @@ public class MapIsland {
     private int widthIsland = 4;
     private int durationSimulationCycle = 5000;
     private float proportionNumberAnimalsFromMax = 0.1f;
+    private int minimumCountOrganism = 1;
     private volatile List <Animal>  listOfAnimal = new ArrayList<>();
     private volatile List <Plant>  listOfPlants = new ArrayList<>();
     private Cell[][] listOfCellsIsland;
@@ -31,6 +32,15 @@ public class MapIsland {
            instance = new MapIsland();
        }
        return instance;
+    }
+    private MapIsland() {
+        initialisationCellsOfIsland ();
+    }
+    public static MapIsland getInstance(int lengthIsland, int widthIsland, int durationSimulationCycle, int proportionNumberAnimalsFromMax){
+        if (instance==null) {
+            instance = new MapIsland(lengthIsland, widthIsland, durationSimulationCycle, proportionNumberAnimalsFromMax);
+        }
+        return instance;
     }
     public float getProportionNumberAnimalsFromMax() {
         return proportionNumberAnimalsFromMax;
@@ -60,12 +70,6 @@ public class MapIsland {
         }
         return result;
     }
-    public static MapIsland getInstance(int lengthIsland, int widthIsland, int durationSimulationCycle, int proportionNumberAnimalsFromMax){
-        if (instance==null) {
-            instance = new MapIsland(lengthIsland, widthIsland, durationSimulationCycle, proportionNumberAnimalsFromMax);
-        }
-        return instance;
-    }
     public int getDurationSimulationCycle() {
         return durationSimulationCycle;
     }
@@ -86,9 +90,9 @@ public class MapIsland {
                 }
         synchronized (map) {
             if (map.get(organism.getClass())==null) {
-                map.put(organism.getClass(),1);
+                map.put(organism.getClass(),minimumCountOrganism);
             } else {
-                map.put(organism.getClass(),map.get(organism.getClass())+1);
+                map.put(organism.getClass(),map.get(organism.getClass())+minimumCountOrganism);
             }
         }
     }
@@ -100,13 +104,10 @@ public class MapIsland {
             map = statistics.getStatisticsOfAnimalHerbivorous();
         } else {
             map = statistics.getStatisticsOfPlants();
-         //       if (listOfPlants.indexOf(organism)>0) {
-         //           this.listOfPlants.remove(organism);
-         //       }
         }
         synchronized (map) {
-            if (map.get(organism.getClass())>1) {
-                map.put(organism.getClass(),map.get(organism.getClass())-1);
+            if (map.get(organism.getClass())>minimumCountOrganism) {
+                map.put(organism.getClass(),map.get(organism.getClass())-minimumCountOrganism);
             } else {
                 if (map.get(organism.getClass())!=null) {
                     map.remove(organism.getClass());
@@ -115,13 +116,10 @@ public class MapIsland {
         }
         HashMap<Class,Integer> mapDeathOrganism =statistics.getStatisticsOfDeath();
             if (mapDeathOrganism.get(organism.getClass()) == null) {
-                mapDeathOrganism.put(organism.getClass(), 1);
+                mapDeathOrganism.put(organism.getClass(), minimumCountOrganism);
             } else {
-                mapDeathOrganism.put(organism.getClass(), mapDeathOrganism.get(organism.getClass()) + 1);
+                mapDeathOrganism.put(organism.getClass(), mapDeathOrganism.get(organism.getClass()) + minimumCountOrganism);
             }
-    }
-    private MapIsland() {
-        initialisationCellsOfIsland ();
     }
     public MapIsland(int lengthIsland, int widthIsland, int durationSimulationCycle, int proportionNumberAnimalsFromMax) {
         this.lengthIsland = lengthIsland;
