@@ -1,4 +1,5 @@
 package Island;
+
 import Island.Organism.Organism;
 import java.util.*;
 public class Cell {
@@ -9,6 +10,10 @@ public class Cell {
     private int y;
     private Map<String, Integer> numberOfLivingOrganisms = new HashMap<>();
     private static  Map<String, Integer> maxCountOrganismInCell = new HashMap<>();
+    public Cell(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
     private static void initMaxCountOrganismInCell (){
         maxCountOrganismInCell.put("Wolf", 30);
         maxCountOrganismInCell.put("Boa", 30);
@@ -80,10 +85,6 @@ public class Cell {
     }
     public List<Organism> getOrganisms() {
         return organisms;
-    }
-    public Cell(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
     public int getX() {
         return x;
