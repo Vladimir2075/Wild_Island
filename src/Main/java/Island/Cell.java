@@ -2,11 +2,11 @@ package Island;
 import Island.Organism.Organism;
 import java.util.*;
 public class Cell {
-    private static final Integer ZER0_COUNT =0;
+    private static final Integer ZER0_COUNT = 0;
     private static final Integer MIN_COUNT_ANIMAL = 1;
     private volatile List<Organism> organisms = new LinkedList<>();
-    private int X;
-    private int Y;
+    private int x;
+    private int y;
     private Map<String, Integer> numberOfLivingOrganisms = new HashMap<>();
     private static  Map<String, Integer> maxCountOrganismInCell = new HashMap<>();
     private static void initMaxCountOrganismInCell (){
@@ -43,8 +43,8 @@ public class Cell {
     @Override
     public String toString() {
         return "Cell{" +
-                "x=" + X +
-                ", y=" + Y +
+                "x=" + x +
+                ", y=" + y +
                 ", numberOfLivingOrganisms=" + numberOfLivingOrganisms +
                 '}';
     }
@@ -82,13 +82,13 @@ public class Cell {
         return organisms;
     }
     public Cell(int x, int y) {
-        this.X = x;
-        this.Y = y;
+        this.x = x;
+        this.y = y;
     }
     public int getX() {
-        return X;
+        return x;
     }
     public int getY() {
-        return Y;
+        return y;
     }
 }

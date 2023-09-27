@@ -28,6 +28,7 @@ public abstract class Animal extends Organism implements Runnable {
     private volatile float lifeLevel = 100f;
     private float lossEnergyLife = 20;
     private volatile boolean isAlive = true;
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
     public Animal() {
         super();
         setMaxSpeed();
@@ -165,6 +166,27 @@ public abstract class Animal extends Organism implements Runnable {
         }
     }
     public abstract void eat();
+    @Override
+    public void run() {
+        this.setRunThread(true);
+        while (this.isAlive()) {
+            int index = random.nextInt(COUNT_ACTIONS_ANIMAL);
+            try {
+                for (int i = 0; i < COUNT_ACTIONS_ANIMAL; i++) {
+                    switch (i + index) {
+                        case 0: if (this.isAlive()) {this.eat();break;}
+                        case 1: if (this.isAlive()) {this.move();break;}
+                        case 2: if (this.isAlive()) {this.multiply();break;}
+                        case 3: if (this.isAlive()) {this.eat();break;}
+                        case 4: if (this.isAlive()) { this.move(); break; }
+                    }
+                }
+                Thread.sleep(MapIsland.TIME_WAIT_BETWEEN_ACTIONS_ANIMAL);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
     @Override
     public String toString() {
         return "{" +
